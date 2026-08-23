@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Post para WhatsApp</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 10px;
+            color: #333;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 10px auto;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #075e54;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #444;
+            font-size: 14px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px; /* Evita zoom automático em alguns celulares */
+        }
+        input[type="text"]:focus {
+            border-color: #25d366;
+            outline: none;
+        }
+        .preview-box {
+            margin-top: 20px;
+            background: #e5ddd5;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #dcd6d0;
+        }
+        .preview-box h3 {
+            margin-top: 0;
+            font-size: 15px;
+            color: #075e54;
+        }
+        textarea {
+            width: 100%;
+            height: 160px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+            resize: vertical;
+            background: #fff;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .btn:active {
+            background-color: #128c7e;
+        }
+        .toast {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #25d366;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* Ajustes específicos para telas muito pequenas (celulares compactos) */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            .container {
+                padding: 10px;
+                border-radius: 8px;
+            }
+            h2 {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Gerador de Ofertas - WhatsApp</h2>
+    
+    <div class="form-group">
+        <label for="item">📖 Nome do Item:</label>
+        <input type="text" id="item" placeholder="Ex: Smartphone XYZ 128GB" oninput="gerarPost()">
+    </div>
+
+    <div class="form-group">
+        <label for="precoDe">💸 Preço DE (Antigo):</label>
+        <input type="text" id="precoDe" placeholder="Ex: 1.500,00" oninput="gerarPost()">
+    </div>
+
+    <div class="form-group">
+        <label for="precoPor">💸 Preço POR (Atual):</label>
+        <input type="text" id="precoPor" placeholder="Ex: 1.200,00" oninput="gerarPost()">
+    </div>
+
+    <div class="form-group">
+        <label for="link">👉 Link de Compra:</label>
+        <input type="text" id="link" placeholder="Ex: https://suaturl.com/oferta" oninput="gerarPost()">
+    </div>
+
+    <div class="form-group">
+        <label for="cupom">🏷️ Cupom de Desconto (Opcional):</label>
+        <input type="text" id="cupom" placeholder="Ex: DESCONTO10" oninput="gerarPost()">
+    </div>
+
+    <div class="preview-box">
+        <h3>Mensagem Gerada:</h3>
+        <textarea id="resultado" readonly></textarea>
+        <button class="btn" onclick="copiarTexto()">Copiar para o WhatsApp</button>
+        <div id="avisoCopia" class="toast">Texto copiado com sucesso!</div>
+    </div>
+</div>
+
+<script>
+    function gerarPost() {
+        const item = document.getElementById('item').value.trim();
+        const precoDe = document.getElementById('precoDe').value.trim();
+        const precoPor = document.getElementById('precoPor').value.trim();
+        const link = document.getElementById('link').value.trim();
+        const cupom = document.getElementById('cupom').value.trim();
+
+        let mensagem = `📖 *Item*: ${item}\n\n`;
+        mensagem += `🔥 *Desconto especial aplicado!*\n\n`;
+        mensagem += `💸\n*DE* ~R$ ${precoDe}~ *POR* R$ ${precoPor}\n\n`;
+        mensagem += `👉 *Compre por aqui:* ${link}\n\n`;
+        
+        if (cupom !== "") {
+            mensagem += `🏷️ *Cupom de Desconto:* ${cupom}\n\n`;
+        }
+        
+        mensagem += `⚠️ *Dica:* ative as notificações do canal para não perder nenhuma oferta exclusiva!`;
+
+        document.getElementById('resultado').value = mensagem;
+    }
+
+    function copiarTexto() {
+        const textarea = document.getElementById('resultado');
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            const aviso = document.getElementById('avisoCopia');
+            aviso.style.display = 'block';
+            setTimeout(() => {
+                aviso.style.display = 'none';
+            }, 2000);
+        });
+    }
+
+    gerarPost();
+</script>
+
+</body>
+</html>
