@@ -45,7 +45,7 @@
             padding: 12px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            font-size: 16px; /* Evita zoom automático em alguns celulares */
+            font-size: 16px;
         }
         input[type="text"]:focus {
             border-color: #25d366;
@@ -74,6 +74,10 @@
             resize: vertical;
             background: #fff;
         }
+        textarea:focus {
+            border-color: #25d366;
+            outline: none;
+        }
         .btn {
             display: block;
             width: 100%;
@@ -100,7 +104,6 @@
             display: none;
         }
 
-        /* Ajustes específicos para telas muito pequenas (celulares compactos) */
         @media (max-width: 480px) {
             body {
                 padding: 5px;
@@ -146,15 +149,22 @@
     </div>
 
     <div class="preview-box">
-        <h3>Mensagem Gerada:</h3>
-        <textarea id="resultado" readonly></textarea>
+        <h3>Mensagem Gerada (Você pode editar livremente abaixo):</h3>
+        <!-- Removido o 'readonly' e adicionada a flag de controle -->
+        <textarea id="resultado" oninput="usuarioEditouManual()"></textarea>
         <button class="btn" onclick="copiarTexto()">Copiar para o WhatsApp</button>
         <div id="avisoCopia" class="toast">Texto copiado com sucesso!</div>
     </div>
 </div>
 
 <script>
+    // Variável para controlar se o usuário mexeu manualmente na caixa de texto
+    let editadoManualmente = false;
+
     function gerarPost() {
+        // Se o usuário já começou a editar o texto por conta própria, não sobrescrevemos com o form
+        if (editadoManualmente) return;
+
         const item = document.getElementById('item').value.trim();
         const precoDe = document.getElementById('precoDe').value.trim();
         const precoPor = document.getElementById('precoPor').value.trim();
@@ -173,6 +183,11 @@
         mensagem += `⚠️ *Dica:* ative as notificações do canal para não perder nenhuma oferta exclusiva!`;
 
         document.getElementById('resultado').value = mensagem;
+    }
+
+    // Chamado quando o usuário digita diretamente no textarea
+    function usuarioEditouManual() {
+        editadoManualmente = true;
     }
 
     function copiarTexto() {
