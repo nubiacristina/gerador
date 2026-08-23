@@ -103,19 +103,6 @@
             font-weight: bold;
             display: none;
         }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 5px;
-            }
-            .container {
-                padding: 10px;
-                border-radius: 8px;
-            }
-            h2 {
-                font-size: 19px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -150,7 +137,6 @@
 
     <div class="preview-box">
         <h3>Mensagem Gerada (Você pode editar livremente abaixo):</h3>
-        <!-- Removido o 'readonly' e adicionada a flag de controle -->
         <textarea id="resultado" oninput="usuarioEditouManual()"></textarea>
         <button class="btn" onclick="copiarTexto()">Copiar para o WhatsApp</button>
         <div id="avisoCopia" class="toast">Texto copiado com sucesso!</div>
@@ -158,11 +144,9 @@
 </div>
 
 <script>
-    // Variável para controlar se o usuário mexeu manualmente na caixa de texto
     let editadoManualmente = false;
 
     function gerarPost() {
-        // Se o usuário já começou a editar o texto por conta própria, não sobrescrevemos com o form
         if (editadoManualmente) return;
 
         const item = document.getElementById('item').value.trim();
@@ -173,7 +157,7 @@
 
         let mensagem = `📖 *Item*: ${item}\n\n`;
         mensagem += `🔥 *Desconto especial aplicado!*\n\n`;
-        mensagem += `💸\n*DE* ~R$ ${precoDe}~ *POR* R$ ${precoPor}\n\n`;
+        mensagem += `💸 *DE* ~R$ ${precoDe}~ *POR* R$ ${precoPor}\n\n`;
         mensagem += `👉 *Compre por aqui:* ${link}\n\n`;
         
         if (cupom !== "") {
@@ -185,7 +169,6 @@
         document.getElementById('resultado').value = mensagem;
     }
 
-    // Chamado quando o usuário digita diretamente no textarea
     function usuarioEditouManual() {
         editadoManualmente = true;
     }
@@ -204,7 +187,10 @@
         });
     }
 
-    gerarPost();
+    // Executa uma vez ao carregar a página sem travar o comportamento
+    window.onload = function() {
+        gerarPost();
+    };
 </script>
 
 </body>
