@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Post para WhatsApp</title>
+    <title>Gerador de Ofertas - WhatsApp & Telegram</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,7 +12,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #f0f2f5;
             margin: 0;
-            padding: 10px;
+            padding: 12px;
             color: #333;
         }
         .container {
@@ -20,15 +20,23 @@
             max-width: 600px;
             margin: 10px auto;
             background: #ffffff;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 18px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
         }
-        h2 {
+        .header-title {
             text-align: center;
-            color: #075e54;
             margin-bottom: 20px;
+        }
+        .header-title h2 {
+            margin: 0 0 4px 0;
+            color: #075e54;
             font-size: 22px;
+        }
+        .header-title p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
         }
         .form-group {
             margin-bottom: 12px;
@@ -36,16 +44,17 @@
         label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: 600;
             color: #444;
-            font-size: 14px;
+            font-size: 13.5px;
         }
         input[type="text"] {
             width: 100%;
-            padding: 12px;
+            padding: 11px 12px;
             border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.2s;
         }
         input[type="text"]:focus {
             border-color: #25d366;
@@ -53,24 +62,30 @@
         }
         .preview-box {
             margin-top: 20px;
-            background: #e5ddd5;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #dcd6d0;
+            background: #eef2f5;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #dcdfe4;
         }
         .preview-box h3 {
-            margin-top: 0;
-            font-size: 15px;
-            color: #075e54;
+            margin: 0 0 6px 0;
+            font-size: 14px;
+            color: #1f2937;
+        }
+        .hint {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
         }
         textarea {
             width: 100%;
-            height: 160px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-family: monospace;
+            height: 170px;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             font-size: 13px;
+            line-height: 1.45;
             resize: vertical;
             background: #fff;
         }
@@ -78,37 +93,75 @@
             border-color: #25d366;
             outline: none;
         }
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        @media (max-width: 480px) {
+            .btn-group {
+                grid-template-columns: 1fr;
+            }
+        }
         .btn {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             width: 100%;
-            background-color: #25d366;
             color: white;
             border: none;
-            padding: 14px;
-            font-size: 16px;
+            padding: 13px;
+            font-size: 14px;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            margin-top: 15px;
             text-align: center;
+            transition: transform 0.1s, opacity 0.2s, background-color 0.2s;
         }
         .btn:active {
-            background-color: #128c7e;
+            transform: scale(0.98);
+        }
+        .btn-wa {
+            background-color: #25d366;
+        }
+        .btn-wa:hover {
+            background-color: #1ebd59;
+        }
+        .btn-tg {
+            background-color: #229ED9;
+        }
+        .btn-tg:hover {
+            background-color: #1a88bd;
         }
         .toast {
             text-align: center;
             margin-top: 10px;
-            font-size: 14px;
-            color: #25d366;
-            font-weight: bold;
+            font-size: 13.5px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 6px;
             display: none;
+            transition: all 0.3s ease;
+        }
+        .toast-wa {
+            color: #075e54;
+            background: #dcf8c6;
+        }
+        .toast-tg {
+            color: #0e5b82;
+            background: #d7effb;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Gerador de Ofertas - WhatsApp</h2>
+    <div class="header-title">
+        <h2>Gerador de Ofertas</h2>
+        <p>Gere e copie com a formatação certa para WhatsApp ou Telegram</p>
+    </div>
     
     <div class="form-group">
         <label for="item">📖 Nome do Item:</label>
@@ -127,7 +180,7 @@
 
     <div class="form-group">
         <label for="link">👉 Link de Compra:</label>
-        <input type="text" id="link" placeholder="Ex: https://suaturl.com/oferta" oninput="gerarPost()">
+        <input type="text" id="link" placeholder="Ex: https://sualink.com/oferta" oninput="gerarPost()">
     </div>
 
     <div class="form-group">
@@ -141,16 +194,27 @@
     </div>
 
     <div class="preview-box">
-        <h3>Mensagem Gerada (Você pode editar livremente abaixo):</h3>
+        <h3>Mensagem Gerada (Edite livremente se desejar):</h3>
+        <div class="hint">A caixa exibe o padrão do WhatsApp (* e ~). Ao clicar no Telegram, ele converterá para (** e ~~) automaticamente.</div>
         <textarea id="resultado" oninput="usuarioEditouManual()"></textarea>
-        <button class="btn" onclick="copiarTexto()">Copiar para o WhatsApp</button>
-        <div id="avisoCopia" class="toast">Texto copiado com sucesso!</div>
+        
+        <div class="btn-group">
+            <button class="btn btn-wa" onclick="copiarParaWhatsApp()">
+                <span>🟢 Copiar p/ WhatsApp (* e ~)</span>
+            </button>
+            <button class="btn btn-tg" onclick="copiarParaTelegram()">
+                <span>🔵 Copiar p/ Telegram (** e ~~)</span>
+            </button>
+        </div>
+
+        <div id="avisoCopia" class="toast"></div>
     </div>
 </div>
 
 <script>
     let editadoManualmente = false;
 
+    // Gera a mensagem com o padrão inicial do WhatsApp (*negrito* e ~riscado~)
     function gerarPost() {
         if (editadoManualmente) return;
 
@@ -163,7 +227,13 @@
 
         let mensagem = `📖 *Item*: ${item}\n\n`;
         mensagem += `🔥 *Desconto especial aplicado!*\n\n`;
-        mensagem += `💸 *DE* ~R$ ${precoDe}~ *POR* R$ ${precoPor}\n\n`;
+        
+        if (precoDe) {
+            mensagem += `💸 *DE* ~R$ ${precoDe}~ *POR* R$ ${precoPor}\n\n`;
+        } else {
+            mensagem += `💸 *POR* R$ ${precoPor}\n\n`;
+        }
+        
         mensagem += `👉 *Compre por aqui:* ${link}\n\n`;
         
         if (cupom !== "") {
@@ -171,7 +241,7 @@
         }
 
         if (observacao !== "") {
-            mensagem += `ℹ️ *\*Observação\*:* ${observacao}\n\n`;
+            mensagem += `ℹ️ *Observação:* ${observacao}\n\n`;
         }
         
         mensagem += `⚠️ *Dica:* ative as notificações do canal para não perder nenhuma oferta exclusiva!`;
@@ -183,21 +253,93 @@
         editadoManualmente = true;
     }
 
-    function copiarTexto() {
-        const textarea = document.getElementById('resultado');
-        textarea.select();
-        textarea.setSelectionRange(0, 99999);
-        
-        navigator.clipboard.writeText(textarea.value).then(() => {
-            const aviso = document.getElementById('avisoCopia');
-            aviso.style.display = 'block';
-            setTimeout(() => {
-                aviso.style.display = 'none';
-            }, 2000);
-        });
+    // Converte a marcação do WhatsApp (* e ~) para o Telegram (** e ~~)
+    function converterParaTelegram(texto) {
+        if (!texto) return '';
+        let convertido = texto;
+
+        // Converte *texto* para **texto** (evitando duplicar se já tiver dois asteriscos)
+        try {
+            convertido = convertido.replace(/(?<!\*)\*([^*\r\n]+)\*(?!\*)/g, '**$1**');
+            convertido = convertido.replace(/(?<!~)\~([^~\r\n]+)\~(?!\~)/g, '~~$1~~');
+        } catch (e) {
+            convertido = convertido
+                .replace(/(^|[^*])\*([^*\r\n]+)\*([^*]|$)/g, '$1**$2**$3')
+                .replace(/(^|[^~])\~([^~\r\n]+)\~([^~]|$)/g, '$1~~$2~~$3');
+        }
+
+        return convertido;
     }
 
-    // Executa uma vez ao carregar a página sem travar o comportamento
+    // Função utilitária para copiar qualquer texto para a área de transferência
+    function copiarTextoParaClipboard(texto, plataforma) {
+        if (!texto.trim()) {
+            mostrarAviso("O texto está vazio!", "wa");
+            return;
+        }
+
+        const tempTextarea = document.createElement('textarea');
+        tempTextarea.value = texto;
+        tempTextarea.style.position = 'fixed';
+        tempTextarea.style.left = '-9999px';
+        tempTextarea.style.top = '0';
+        document.body.appendChild(tempTextarea);
+        tempTextarea.focus();
+        tempTextarea.select();
+
+        let sucesso = false;
+        try {
+            sucesso = document.execCommand('copy');
+        } catch (err) {
+            console.error(err);
+        }
+        document.body.removeChild(tempTextarea);
+
+        if (!sucesso && navigator.clipboard) {
+            navigator.clipboard.writeText(texto).then(() => {
+                feedbackCopia(plataforma);
+            });
+            return;
+        }
+
+        if (sucesso) {
+            feedbackCopia(plataforma);
+        } else {
+            mostrarAviso("Erro ao copiar. Selecione o texto manualmente.", "wa");
+        }
+    }
+
+    function feedbackCopia(plataforma) {
+        if (plataforma === 'telegram') {
+            mostrarAviso("✓ Copiado para Telegram com ** e ~~!", "tg");
+        } else {
+            mostrarAviso("✓ Copiado para WhatsApp com * e ~!", "wa");
+        }
+    }
+
+    function copiarParaWhatsApp() {
+        const texto = document.getElementById('resultado').value;
+        copiarTextoParaClipboard(texto, 'whatsapp');
+    }
+
+    function copiarParaTelegram() {
+        const textoOriginal = document.getElementById('resultado').value;
+        const textoTelegram = converterParaTelegram(textoOriginal);
+        copiarTextoParaClipboard(textoTelegram, 'telegram');
+    }
+
+    function mostrarAviso(msg, tipo) {
+        const aviso = document.getElementById('avisoCopia');
+        aviso.textContent = msg;
+        aviso.className = 'toast ' + (tipo === 'tg' ? 'toast-tg' : 'toast-wa');
+        aviso.style.display = 'block';
+        
+        if (window.avisoTimeout) clearTimeout(window.avisoTimeout);
+        window.avisoTimeout = setTimeout(() => {
+            aviso.style.display = 'none';
+        }, 2500);
+    }
+
     window.onload = function() {
         gerarPost();
     };
